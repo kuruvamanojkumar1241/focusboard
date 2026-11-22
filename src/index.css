@@ -991,6 +991,188 @@ input, select, textarea {
    Overview Dashboard: 4 Stat Metric Cards (Image 1)
    ========================================================================== */
 
+.overview-dashboard-root {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.focus-notes-carousel {
+  width: 100%;
+}
+
+.focus-notes-card {
+  min-height: 174px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(99, 102, 241, 0.14);
+  background:
+    radial-gradient(circle at 88% 20%, rgba(139, 92, 246, 0.12), transparent 28%),
+    linear-gradient(135deg, #F7F5FF 0%, #FFFFFF 72%);
+  padding: 26px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(47, 35, 120, 0.06);
+}
+
+.focus-notes-card.accent-amber {
+  border-color: rgba(245, 158, 11, 0.16);
+  background:
+    radial-gradient(circle at 88% 20%, rgba(245, 158, 11, 0.14), transparent 28%),
+    linear-gradient(135deg, #FFFBEB 0%, #FFFFFF 72%);
+}
+
+.focus-notes-card.accent-emerald {
+  border-color: rgba(16, 185, 129, 0.16);
+  background:
+    radial-gradient(circle at 88% 20%, rgba(16, 185, 129, 0.13), transparent 28%),
+    linear-gradient(135deg, #ECFDF5 0%, #FFFFFF 72%);
+}
+
+.focus-notes-left {
+  min-width: 0;
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.focus-notes-badge-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.focus-notes-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 28px;
+  padding: 5px 9px;
+  border-radius: var(--radius-full);
+  background-color: rgba(93, 56, 222, 0.09);
+  color: var(--color-primary-purple);
+  font-size: 0.69rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.focus-badge-icon {
+  flex-shrink: 0;
+}
+
+.accent-amber .focus-notes-badge {
+  background-color: rgba(245, 158, 11, 0.12);
+  color: #B45309;
+}
+
+.accent-emerald .focus-notes-badge {
+  background-color: rgba(16, 185, 129, 0.12);
+  color: #047857;
+}
+
+.focus-notes-counter {
+  color: #8A879B;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.focus-notes-title {
+  color: var(--text-main);
+  font-size: 1.55rem;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 7px;
+}
+
+.focus-notes-description {
+  max-width: 680px;
+  color: #77738B;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.focus-notes-controls-column {
+  min-width: 112px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+  justify-content: space-between;
+  padding: 2px 0 1px;
+}
+
+.carousel-nav-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
+}
+
+.carousel-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid #E7E8F2;
+  background: rgba(255, 255, 255, 0.92);
+  color: #656278;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(27, 23, 54, 0.08);
+  transition: all 0.16s ease;
+}
+
+.carousel-btn:hover {
+  color: var(--color-primary-purple);
+  border-color: rgba(93, 56, 222, 0.28);
+  transform: translateY(-1px);
+}
+
+.carousel-btn:focus-visible,
+.indicator-dot:focus-visible {
+  outline: 3px solid rgba(93, 56, 222, 0.2);
+  outline-offset: 2px;
+}
+
+.carousel-indicators {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 18px;
+}
+
+.indicator-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: #D3D1DF;
+  transition: width 0.16s ease, background-color 0.16s ease;
+}
+
+.indicator-dot.active {
+  width: 20px;
+  background: var(--color-primary-purple);
+}
+
+.accent-amber .indicator-dot.active {
+  background: #D97706;
+}
+
+.accent-emerald .indicator-dot.active {
+  background: #059669;
+}
+
 .taskbito-stats-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -2753,6 +2935,33 @@ input, select, textarea {
   .taskbito-content-area {
     padding: 16px 14px 84px;
     gap: 16px;
+  }
+
+  .focus-notes-card {
+    min-height: 188px;
+    align-items: flex-start;
+    padding: 20px;
+  }
+
+  .focus-notes-title {
+    font-size: 1.25rem;
+  }
+
+  .focus-notes-description {
+    font-size: 0.82rem;
+  }
+
+  .focus-notes-controls-column {
+    min-width: 42px;
+  }
+
+  .carousel-nav-buttons {
+    flex-direction: column;
+  }
+
+  .carousel-btn {
+    width: 34px;
+    height: 34px;
   }
 
   /* Show EnglishSathi mobile header */
