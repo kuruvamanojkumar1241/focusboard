@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Calendar, AlertCircle } from 'lucide-react';
+import { ChevronLeft, Calendar, AlertCircle } from 'lucide-react';
 
 export default function TaskForm({
   isOpen,
   onClose,
   onSubmit,
   initialData = null,
-  availableCategories = ['Design', 'Development', 'Testing', 'Research', 'Marketing', 'Operations']
+  availableCategories = ['Design', 'Development', 'Testing', 'Research']
 }) {
   const isEditing = Boolean(initialData && initialData.id);
 
@@ -21,7 +21,6 @@ export default function TaskForm({
 
   const titleInputRef = useRef(null);
 
-  // Sync form state when modal opens or initialData changes
   useEffect(() => {
     if (isOpen) {
       if (initialData) {
@@ -32,27 +31,23 @@ export default function TaskForm({
         setPriority(initialData.priority || 'Medium');
         setDueDate(initialData.dueDate || '');
       } else {
-        // Defaults for new task
         setTitle('');
         setDescription('');
         setCategory('Design');
         setStatus('To do');
         setPriority('Medium');
-        // Default due date: tomorrow
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         setDueDate(tomorrow.toISOString().split('T')[0]);
       }
       setErrors({});
 
-      // Focus input after modal renders
       setTimeout(() => {
         titleInputRef.current?.focus();
       }, 100);
     }
   }, [isOpen, initialData]);
 
-  // Handle escape key to close modal
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && isOpen) {
@@ -65,7 +60,6 @@ export default function TaskForm({
 
   if (!isOpen) return null;
 
-  // Validation
   const validate = () => {
     const newErrors = {};
     const trimmedTitle = title.trim();
@@ -103,110 +97,87 @@ export default function TaskForm({
   return (
     <div className="modal-backdrop" onClick={onClose} role="presentation">
       <div 
-        className="modal-content task-form-modal"
+        className="modal-content pixelstrap-task-modal"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-labelledby="task-form-title"
       >
-        {/* Modal Header */}
-        <div className="modal-header">
-          <div>
-            <h2 id="task-form-title" className="modal-title">
-              {isEditing ? 'Edit Task' : 'Create New Task'}
-            </h2>
-            <p className="modal-subtitle">
-              {isEditing 
-                ? `Update details for task ${initialData.id}` 
-                : 'Fill in the information below to add a task to your FocusBoard.'}
-            </p>
-          </div>
+        {/* Pixelstrap Figma Header: Back Arrow Button + Green Title */}
+        <div className="pixelstrap-header">
           <button
             type="button"
-            className="modal-close-btn"
+            className="pixelstrap-back-btn"
             onClick={onClose}
-            aria-label="Close form modal"
+            aria-label="Back to dashboard"
+            title="Cancel and go back"
           >
-            <X size={20} />
+            <ChevronLeft size={20} />
           </button>
+          <div className="pixelstrap-title-wrap">
+            <h2 id="task-form-title" className="pixelstrap-heading">
+              {isEditing ? 'Edit Task' : 'Create New Task'}
+            </h2>
+            <p className="pixelstrap-subheading">
+              Assign a clear objective and set expectations for your team.
+            </p>
+          </div>
         </div>
 
-        {/* Modal Form */}
-        <form onSubmit={handleSubmit} className="task-form" noValidate>
-          {/* Title Field */}
-          <div className="form-group">
-            <label htmlFor="task-title-input" className="form-label required-label">
+        {/* Form Card Container */}
+        <form onSubmit={handleSubmit} className="pixelstrap-form-card" noValidate>
+          {/* Task Title */}
+          <div className="pixelstrap-form-group">
+            <label htmlFor="task-title-input" className="pixelstrap-label">
               Task Title
             </label>
             <input
               ref={titleInputRef}
               type="text"
               id="task-title-input"
-              className={`form-input ${errors.title ? 'input-error' : ''}`}
-              placeholder="e.g., Finalize interactive prototypes for client review"
+              className={`pixelstrap-input ${errors.title ? 'input-error' : ''}`}
+              placeholder="e.g. Follow up with Lead #402 regarding Q3 Promo"
               value={title}
               onChange={(e) => {
                 setTitle(e.target.value);
                 if (errors.title) setErrors((prev) => ({ ...prev, title: null }));
               }}
               required
-              aria-required="true"
-              aria-invalid={Boolean(errors.title)}
-              aria-describedby={errors.title ? 'title-error-msg' : undefined}
             />
             {errors.title && (
-              <div id="title-error-msg" className="form-error-msg">
+              <div className="form-error-msg">
                 <AlertCircle size={14} />
                 <span>{errors.title}</span>
               </div>
             )}
           </div>
 
-          {/* Description Field */}
-          <div className="form-group">
-            <label htmlFor="task-desc-input" className="form-label">
-              Description <span className="label-optional">(Optional)</span>
+          {/* Description */}
+          <div className="pixelstrap-form-group">
+            <label htmlFor="task-desc-input" className="pixelstrap-label">
+              Description
             </label>
             <textarea
               id="task-desc-input"
-              className="form-textarea"
-              rows={3}
-              placeholder="Add key deliverables, acceptance criteria, or relevant context..."
+              className="pixelstrap-textarea"
+              rows={4}
+              placeholder="Provide detailed instructions and context for this task..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
 
-          {/* Grid row for Category, Priority, Status */}
-          <div className="form-grid-3">
-            {/* Category */}
-            <div className="form-group">
-              <label htmlFor="task-category-select" className="form-label">
-                Category
-              </label>
-              <select
-                id="task-category-select"
-                className="form-select"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                {availableCategories.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Priority */}
-            <div className="form-group">
-              <label htmlFor="task-priority-select" className="form-label required-label">
-                Priority
+          {/* Row: Priority Level & Initial Status */}
+          <div className="pixelstrap-form-row">
+            <div className="pixelstrap-form-group">
+              <label htmlFor="task-priority-select" className="pixelstrap-label">
+                Priority Level
               </label>
               <select
                 id="task-priority-select"
-                className="form-select"
+                className="pixelstrap-select"
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
-                required
               >
                 <option value="Low">Low Priority</option>
                 <option value="Medium">Medium Priority</option>
@@ -214,67 +185,80 @@ export default function TaskForm({
               </select>
             </div>
 
-            {/* Status */}
-            <div className="form-group">
-              <label htmlFor="task-status-select" className="form-label required-label">
-                Status
+            <div className="pixelstrap-form-group">
+              <label htmlFor="task-status-select" className="pixelstrap-label">
+                Initial Status
               </label>
               <select
                 id="task-status-select"
-                className="form-select"
+                className="pixelstrap-select"
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                required
               >
-                <option value="To do">To do</option>
-                <option value="In progress">In progress</option>
+                <option value="To do">Pending / To do</option>
+                <option value="In progress">In Progress</option>
                 <option value="Completed">Completed</option>
               </select>
             </div>
           </div>
 
-          {/* Due Date Field */}
-          <div className="form-group">
-            <label htmlFor="task-duedate-input" className="form-label required-label">
-              Due Date
-            </label>
-            <div className="input-with-icon">
-              <Calendar size={18} className="field-icon" aria-hidden="true" />
-              <input
-                type="date"
-                id="task-duedate-input"
-                className={`form-input has-icon ${errors.dueDate ? 'input-error' : ''}`}
-                value={dueDate}
-                onChange={(e) => {
-                  setDueDate(e.target.value);
-                  if (errors.dueDate) setErrors((prev) => ({ ...prev, dueDate: null }));
-                }}
-                required
-                aria-required="true"
-                aria-invalid={Boolean(errors.dueDate)}
-                aria-describedby={errors.dueDate ? 'date-error-msg' : undefined}
-              />
+          {/* Category & Due Date Row */}
+          <div className="pixelstrap-form-row">
+            <div className="pixelstrap-form-group">
+              <label htmlFor="task-category-select" className="pixelstrap-label">
+                Category
+              </label>
+              <select
+                id="task-category-select"
+                className="pixelstrap-select"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                {availableCategories.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
             </div>
-            {errors.dueDate && (
-              <div id="date-error-msg" className="form-error-msg">
-                <AlertCircle size={14} />
-                <span>{errors.dueDate}</span>
+
+            <div className="pixelstrap-form-group">
+              <label htmlFor="task-duedate-input" className="pixelstrap-label">
+                Due Date
+              </label>
+              <div className="pixelstrap-date-wrap">
+                <Calendar size={18} className="pixelstrap-cal-icon" />
+                <input
+                  type="date"
+                  id="task-duedate-input"
+                  className={`pixelstrap-input has-icon ${errors.dueDate ? 'input-error' : ''}`}
+                  value={dueDate}
+                  onChange={(e) => {
+                    setDueDate(e.target.value);
+                    if (errors.dueDate) setErrors((prev) => ({ ...prev, dueDate: null }));
+                  }}
+                  required
+                />
               </div>
-            )}
+              {errors.dueDate && (
+                <div className="form-error-msg">
+                  <AlertCircle size={14} />
+                  <span>{errors.dueDate}</span>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Form Actions */}
-          <div className="modal-footer">
+          {/* Bottom Actions: Cancel (outline) + Create Task (green button) */}
+          <div className="pixelstrap-footer-actions">
             <button
               type="button"
-              className="btn btn-secondary"
+              className="pixelstrap-cancel-btn"
               onClick={onClose}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="btn btn-primary"
+              className="pixelstrap-create-btn"
             >
               {isEditing ? 'Save Changes' : 'Create Task'}
             </button>

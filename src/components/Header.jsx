@@ -1,76 +1,72 @@
 import React from 'react';
-import { Menu, Plus, Bell, Sparkles } from 'lucide-react';
+import { 
+  Menu, 
+  Search, 
+  Pin, 
+  PlayCircle, 
+  Layers, 
+  ChevronDown, 
+  Plus 
+} from 'lucide-react';
 
-export default function Header({ onOpenSidebar, onAddTask }) {
-  // Current date formatted nicely
-  const today = new Intl.DateTimeFormat('en-US', {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  }).format(new Date());
-
+export default function Header({ 
+  onOpenSidebar, 
+  searchQuery, 
+  onSearchChange, 
+  onAddTask 
+}) {
   return (
-    <header className="dashboard-header" role="banner">
-      <div className="header-left">
+    <header className="taskbito-header" role="banner">
+      <div className="header-left-group">
         <button 
           type="button" 
           className="menu-toggle-btn"
           onClick={onOpenSidebar}
-          aria-label="Open sidebar navigation"
+          aria-label="Open sidebar"
         >
           <Menu size={22} />
         </button>
 
-        <div className="header-title-block">
-          <div className="header-breadcrumb">
-            <span className="breadcrumb-root">Overview</span>
-            <span className="breadcrumb-sep">/</span>
-            <span className="breadcrumb-current">My Tasks</span>
-          </div>
-          <h1 className="header-title">My Tasks Dashboard</h1>
-          <p className="header-subtitle">Stay aligned, manage priorities, and track daily execution.</p>
+        {/* Taskbito Search Bar with ⌘ 1 shortcut badge */}
+        <div className="taskbito-search-box">
+          <Search size={16} className="taskbito-search-icon" />
+          <input
+            type="text"
+            className="taskbito-search-input"
+            placeholder="Search"
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+          />
+          <kbd className="search-shortcut-badge">⌘ 1</kbd>
         </div>
       </div>
 
-      <div className="header-right">
-        {/* Date pill */}
-        <div className="date-badge" title="Today's Date">
-          <span className="date-dot"></span>
-          <span>{today}</span>
-        </div>
-
-        {/* Notifications mock button */}
-        <button 
-          type="button" 
-          className="header-icon-btn" 
-          aria-label="View notifications"
-          title="Notifications"
-        >
-          <Bell size={18} />
-          <span className="notification-dot" aria-hidden="true" />
+      <div className="header-right-group">
+        {/* Quick action icons */}
+        <button type="button" className="header-round-btn" title="Pin / Favorites">
+          <Pin size={17} />
         </button>
 
-        {/* Primary CTA button */}
-        <button 
-          type="button" 
-          className="btn btn-primary header-add-btn"
-          onClick={onAddTask}
-          aria-label="Add new task"
-        >
-          <Plus size={18} />
-          <span>Add Task</span>
+        <button type="button" className="header-round-btn" title="Tutorial / Video">
+          <PlayCircle size={18} />
         </button>
 
-        {/* User avatar */}
-        <div className="user-profile-badge" title="Alex Morgan (alex.morgan@focusboard.io)">
-          <div className="user-avatar">
-            <span>AM</span>
+        {/* Integrate pill button */}
+        <button type="button" className="integrate-pill-btn">
+          <Layers size={14} className="text-muted" />
+          <span>Integrate</span>
+          <div className="integrate-mini-avatars">
+            <span className="mini-av av-green" />
+            <span className="mini-av av-orange" />
           </div>
-          <div className="user-info">
-            <span className="user-name">Alex Morgan</span>
-            <span className="user-role">Product Lead</span>
+        </button>
+
+        {/* User profile with dropdown */}
+        <div className="taskbito-user-btn" title="Daisy / Alex Morgan">
+          <div className="taskbito-avatar-circle">
+            <span>DM</span>
           </div>
+          <ChevronDown size={14} className="user-chevron" />
         </div>
       </div>
     </header>
