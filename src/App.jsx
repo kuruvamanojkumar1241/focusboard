@@ -49,6 +49,7 @@ export default function App() {
   const [editingTask, setEditingTask] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deletingTask, setDeletingTask] = useState(null);
+  const [projectFilter, setProjectFilter] = useState('All');
 
   // Dynamic Dashboard Statistics
   const totalTasks = tasks.length;
@@ -197,6 +198,7 @@ export default function App() {
         activeNav={activeNav}
         onNavChange={setActiveNav}
         taskCount={totalTasks}
+        onProjectSelect={setProjectFilter}
       />
 
       {/* Main App Container */}
@@ -258,6 +260,7 @@ export default function App() {
           ) : activeNav === 'projects' ? (
             <ProjectsView
               onAddTask={openCreateModal}
+              initialFilter={projectFilter}
               onSelectProjectFilter={() => {
                 setActiveNav('tasks');
                 setActiveSubTab('Lists');

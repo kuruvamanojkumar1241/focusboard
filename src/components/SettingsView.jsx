@@ -10,20 +10,38 @@ import {
   Smartphone,
   Save
 } from 'lucide-react';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 export default function SettingsView({ tasks, onResetSampleData, onImportTasks }) {
-  const [userName, setUserName] = useState('Daisy Morgan');
-  const [userRole, setUserRole] = useState('Product Lead & Designer');
-  const [userEmail, setUserEmail] = useState('daisy.morgan@taskbito.io');
+  const [profile, setProfile] = useLocalStorage('focusboard_profile', {
+    name: 'Daisy Morgan',
+    role: 'Figma Lead',
+    email: 'daisy.morgan@taskbito.io'
+  });
+  const [userName, setUserName] = useState(profile.name);
+  const [userRole, setUserRole] = useState(profile.role);
+  const [userEmail, setUserEmail] = useState(profile.email);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [savedAlert, setSavedAlert] = useState(false);
 
   const handleSaveProfile = (e) => {
     e.preventDefault();
+    setProfile({
+      name: userName.trim(),
+      role: userRole.trim(),
+      email: userEmail.trim()
+    });
     setSavedAlert(true);
     setTimeout(() => setSavedAlert(false), 3000);
   };
+
+  const initials = userName
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join('');
 
   const handleExportJSON = () => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks, null, 2));
@@ -60,7 +78,7 @@ export default function SettingsView({ tasks, onResetSampleData, onImportTasks }
           <form onSubmit={handleSaveProfile} className="settings-form">
             <div className="settings-avatar-row">
               <div className="settings-avatar-circle">
-                <span>DM</span>
+                <span>{initials || 'DM'}</span>
               </div>
               <div>
                 <h4 className="avatar-name">{userName}</h4>

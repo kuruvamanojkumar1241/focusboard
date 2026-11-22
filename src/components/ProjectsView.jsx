@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   FolderKanban, 
   Plus, 
@@ -62,13 +62,18 @@ const INITIAL_PROJECTS = [
   }
 ];
 
-export default function ProjectsView({ onSelectProjectFilter, onAddTask }) {
+export default function ProjectsView({ onSelectProjectFilter, onAddTask, initialFilter = 'All' }) {
   const [projects, setProjects] = useState(INITIAL_PROJECTS);
+  const [activeFilter, setActiveFilter] = useState(initialFilter);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
   const [newProjectDesc, setNewProjectDesc] = useState('');
   const [newProjectCat, setNewProjectCat] = useState('Design & Dev');
   const [newProjectColor, setNewProjectColor] = useState('#06B6D4');
+
+  useEffect(() => {
+    setActiveFilter(initialFilter);
+  }, [initialFilter]);
 
   const handleCreateProject = (e) => {
     e.preventDefault();
@@ -93,6 +98,10 @@ export default function ProjectsView({ onSelectProjectFilter, onAddTask }) {
     setNewProjectDesc('');
   };
 
+  const visibleProjects = activeFilter === 'All'
+    ? projects
+    : projects.filter((project) => project.name === activeFilter);
+
   return (
     <div className="projects-view-root">
       {/* Header */}
@@ -113,9 +122,16 @@ export default function ProjectsView({ onSelectProjectFilter, onAddTask }) {
         </button>
       </div>
 
+      {activeFilter !== 'All' && (
+        <div className="project-filter-banner">
+          <span>Showing: <strong>{activeFilter}</strong></span>
+          <button type="button" onClick={() => setActiveFilter('All')}>Show all projects</button>
+        </div>
+      )}
+
       {/* Projects Grid */}
       <div className="projects-grid">
-        {projects.map((project) => {
+        {visibleProjects.map((project) => {
           const progressPercent = project.totalTasks === 0 ? 0 : Math.round((project.completedTasks / project.totalTasks) * 100);
 
           return (
