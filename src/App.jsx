@@ -302,7 +302,7 @@ export default function App() {
                     onClick={openCreateModal}
                   >
                     <Plus size={16} />
-                    <span>+ New Task</span>
+                    <span>New Task</span>
                   </button>
                 </div>
               </div>
